@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>波音ノート | SWELL NOTES</title>
+<meta name="robots" content="noai, noimageai">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --foam:#EAF6F8;
+    --foam-deep:#D8EEF3;
+    --sea:#2FA8C4;
+    --sea-light:#6FCBDF;
+    --deep:#0B4560;
+    --ink:#0D2B36;
+    --coral:#FF7657;
+    --sand:#F3D9A4;
+    --white:#FFFFFF;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--foam);
+    color:var(--ink);
+    font-family:'Nunito', sans-serif;
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+
+  a{color:inherit;text-decoration:none;}
+
+  h1,h2,h3{
+    font-family:'Righteous', sans-serif;
+    font-weight:400;
+    color:var(--deep);
+  }
+
+  .mono{
+    font-family:'Space Mono', monospace;
+  }
+
+  /* ===== NAV ===== */
+  header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(234,246,248,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(11,69,96,0.1);
+  }
+
+  nav{
+    max-width:1080px;
+    margin:0 auto;
+    padding:18px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .logo{
+    font-family:'Righteous', sans-serif;
+    font-size:1.3rem;
+    color:var(--deep);
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+  }
+
+  .logo span{
+    font-family:'Space Mono', monospace;
+    font-size:0.6rem;
+    letter-spacing:0.18em;
+    color:var(--sea);
+    font-weight:700;
+  }
+
+  .nav-links{
+    display:flex;
+    gap:8px;
+    list-style:none;
+  }
+
+  .nav-links a{
+    font-weight:700;
+    font-size:0.92rem;
+    padding:8px 16px;
+    border-radius:999px;
+    transition:background 0.25s ease, color 0.25s ease;
+    color:var(--deep);
+  }
+
+  .nav-links a:hover, .nav-links a:focus-visible{
+    background:var(--sea);
+    color:var(--white);
+    outline:none;
+  }
+
+  .nav-links .active{
+    background:var(--deep);
+    color:var(--white);
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative;
+    padding:64px 24px 0;
+    max-width:1080px;
+    margin:0 auto;
+    text-align:left;
+  }
+
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.22em;
+    color:var(--coral);
+    font-weight:700;
+    display:inline-block;
+    margin-bottom:18px;
+  }
+
+  .hero h1{
+    font-size:clamp(2.4rem, 6vw, 4.2rem);
+    line-height:1.25;
+    max-width:820px;
+  }
+
+  .hero h1 em{
+    font-style:normal;
+    color:var(--sea);
+  }
+
+  .hero p.lede{
+    margin-top:22px;
+    max-width:520px;
+    font-size:1.08rem;
+    color:var(--ink);
+    opacity:0.85;
+  }
+
+  /* tide readout bar */
+  .readout{
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    max-width:640px;
+    border:1px solid rgba(11,69,96,0.18);
+    border-radius:14px;
+    overflow:hidden;
+    background:rgba(255,255,255,0.6);
+  }
+
+  .readout div{
+    padding:14px 16px;
+    border-right:1px solid rgba(11,69,96,0.12);
+  }
+
+  .readout div:last-child{border-right:none;}
+
+  .readout .label{
+    font-family:'Space Mono', monospace;
+    font-size:0.62rem;
+    letter-spacing:0.1em;
+    color:var(--sea);
+    text-transform:uppercase;
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .readout .value{
+    font-family:'Space Mono', monospace;
+    font-size:1.1rem;
+    font-weight:700;
+    color:var(--deep);
+  }
+
+  /* wave signature element */
+  .wave-wrap{
+    position:relative;
+    width:100%;
+    height:220px;
+    margin-top:56px;
+    overflow:hidden;
+  }
+
+  .wave-wrap svg{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:220%;
+    height:100%;
+  }
+
+  .wave-back{
+    animation:drift 18s linear infinite;
+    opacity:0.5;
+  }
+  .wave-mid{
+    animation:drift 12s linear infinite reverse;
+    opacity:0.75;
+  }
+  .wave-front{
+    animation:drift 8s linear infinite;
+  }
+
+  @keyframes drift{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .wave-back, .wave-mid, .wave-front{animation:none;}
+  }
+
+  /* ===== INTRO ===== */
+  .intro{
+    background:var(--deep);
+    color:var(--foam);
+    padding:64px 24px;
+  }
+
+  .intro-inner{
+    max-width:1080px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1fr 1.4fr;
+    gap:48px;
+    align-items:start;
+  }
+
+  .intro h2{
+    color:var(--white);
+    font-size:1.9rem;
+  }
+
+  .intro .tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.2em;
+    color:var(--sea-light);
+    margin-bottom:10px;
+    display:block;
+  }
+
+  .intro p{
+    color:rgba(234,246,248,0.85);
+    font-size:1rem;
+  }
+
+  .intro p + p{margin-top:14px;}
+
+  /* ===== CATEGORIES ===== */
+  .categories{
+    max-width:1080px;
+    margin:0 auto;
+    padding:72px 24px;
+  }
+
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:32px;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+
+  .section-head h2{font-size:1.9rem;}
+
+  .section-head .count{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    color:var(--sea);
+    font-weight:700;
+  }
+
+  .cat-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+  }
+
+  .cat-card{
+    background:var(--white);
+    border:1px solid rgba(11,69,96,0.1);
+    border-radius:18px;
+    padding:26px 22px;
+    position:relative;
+    transition:transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .cat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 30px rgba(47,168,196,0.18);
+  }
+
+  .cat-card .num{
+    font-family:'Space Mono', monospace;
+    font-size:0.72rem;
+    color:var(--coral);
+    font-weight:700;
+    display:block;
+    margin-bottom:10px;
+  }
+
+  .cat-card h3{
+    font-size:1.2rem;
+    margin-bottom:8px;
+  }
+
+  .cat-card p{
+    font-size:0.92rem;
+    color:var(--ink);
+    opacity:0.75;
+  }
+
+  /* ===== LOG PREVIEW ===== */
+  .log-preview{
+    background:var(--foam-deep);
+    padding:72px 24px;
+  }
+
+  .log-inner{
+    max-width:1080px;
+    margin:0 auto;
+  }
+
+  .log-list{
+    margin-top:28px;
+    border-top:1px solid rgba(11,69,96,0.15);
+  }
+
+  .log-item{
+    display:flex;
+    gap:24px;
+    padding:20px 0;
+    border-bottom:1px solid rgba(11,69,96,0.15);
+    align-items:baseline;
+  }
+
+  .log-item .date{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    color:var(--sea);
+    font-weight:700;
+    flex-shrink:0;
+    width:110px;
+  }
+
+  .log-item .entry{
+    color:var(--ink);
+    opacity:0.85;
+    font-size:0.98rem;
+  }
+
+  .log-more{
+    display:inline-block;
+    margin-top:26px;
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    font-weight:700;
+    color:var(--deep);
+    border-bottom:2px solid var(--coral);
+    padding-bottom:2px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer{
+    background:var(--deep);
+    color:var(--foam);
+    padding:48px 24px 32px;
+    text-align:center;
+  }
+
+  footer .logo-f{
+    font-family:'Righteous', sans-serif;
+    font-size:1.3rem;
+    color:var(--white);
+  }
+
+  footer .foot-links{
+    margin:18px 0;
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+
+  footer .foot-links a{
+    font-size:0.88rem;
+    color:var(--sea-light);
+    font-weight:700;
+  }
+
+  footer .foot-links a:hover{color:var(--white);}
+
+  footer .fine{
+    font-family:'Space Mono', monospace;
+    font-size:0.7rem;
+    color:rgba(234,246,248,0.55);
+    margin-top:18px;
+    line-height:1.8;
+  }
+
+  @media (max-width: 780px){
+    .intro-inner{grid-template-columns:1fr;}
+    .cat-grid{grid-template-columns:1fr;}
+    .readout{grid-template-columns:repeat(2, 1fr);}
+    .readout div:nth-child(2){border-right:none;}
+    .log-item{flex-direction:column;gap:4px;}
+    .log-item .date{width:auto;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">波音ノート<span>SWELL NOTES</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">HOME</a></li>
+      <li><a href="blog.html">LOG</a></li>
+      <li><a href="gallery.html">GALLERY</a></li>
+      <li><a href="about.html">ABOUT</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <span class="eyebrow">WATER SPORTS STUDY LOG</span>
+  <h1>水にまつわるスポーツを、<br><em>ひとつずつ</em>学んでいく。</h1>
+  <p class="lede">サーフィン、水球、水泳、飛び込み、シンクロナイズドスイミング。海やプールで生まれた競技と技術を、初心者の視点で記録していくノートです。</p>
+
+  <div class="readout">
+    <div>
+      <span class="label">FOCUS</span>
+      <span class="value">水球</span>
+    </div>
+    <div>
+      <span class="label">DISCIPLINES</span>
+      <span class="value">05</span>
+    </div>
+    <div>
+      <span class="label">SESSIONS</span>
+      <span class="value">12</span>
+    </div>
+    <div>
+      <span class="label">LEVEL</span>
+      <span class="value">BEGINNER</span>
+    </div>
+  </div>
+
+  <div class="wave-wrap" aria-hidden="true">
+    <svg class="wave-back" viewBox="0 0 2400 220" preserveAspectRatio="none">
+      <path d="M0,140 C200,80 400,80 600,140 C800,200 1000,200 1200,140 C1400,80 1600,80 1800,140 C2000,200 2200,200 2400,140 L2400,220 L0,220 Z" fill="#6FCBDF"></path>
+    </svg>
+    <svg class="wave-mid" viewBox="0 0 2400 220" preserveAspectRatio="none">
+      <path d="M0,160 C200,110 400,110 600,160 C800,210 1000,210 1200,160 C1400,110 1600,110 1800,160 C2000,210 2200,210 2400,160 L2400,220 L0,220 Z" fill="#2FA8C4"></path>
+    </svg>
+    <svg class="wave-front" viewBox="0 0 2400 220" preserveAspectRatio="none">
+      <path d="M0,180 C200,140 400,140 600,180 C800,220 1000,220 1200,180 C1400,140 1600,140 1800,180 C2000,220 2200,220 2400,180 L2400,220 L0,220 Z" fill="#0B4560"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="intro">
+  <div class="intro-inner">
+    <div>
+      <span class="tag">ABOUT THIS NOTEBOOK</span>
+      <h2>海のことを、<br>ちゃんと知りたい。</h2>
+    </div>
+    <div>
+      <p>波の読み方も、水球のルールも、飛び込みの技名も――知らないことばかりでした。それでも「まずは知ることから」と決めて、このノートを始めました。専門書やレッスン、試合観戦で学んだことを、自分の言葉でひとつずつ書き留めています。</p>
+      <p>サーフィン、水球、水泳、飛び込み、シンクロナイズドスイミングを中心に、水にまつわる競技全般を対象に、用語・技術・ルール・歴史まで幅広く記録していきます。上達の記録というより、理解を積み重ねていく学習ノートです。</p>
+    </div>
+  </div>
+</section>
+
+<section class="categories">
+  <div class="section-head">
+    <h2>学習カテゴリ</h2>
+    <span class="count">06 SPORTS</span>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <span class="num">01</span>
+      <h3>サーフィン</h3>
+      <p>テイクオフ、波の種類、板の選び方など、海に乗るための基本知識。</p>
+    </div>
+    <div class="cat-card">
+      <span class="num">02</span>
+      <h3>水球</h3>
+      <p>ルール、ポジション、反則の種類など、激しい攻防を支える競技知識。</p>
+    </div>
+    <div class="cat-card">
+      <span class="num">03</span>
+      <h3>水泳</h3>
+      <p>4泳法の基本フォームや、タイムを支える練習理論のメモ。</p>
+    </div>
+    <div class="cat-card">
+      <span class="num">04</span>
+      <h3>飛び込み</h3>
+      <p>技の系統、回転・ひねりの種類、採点方法など空中動作の知識。</p>
+    </div>
+    <div class="cat-card">
+      <span class="num">05</span>
+      <h3>シンクロナイズドスイミング</h3>
+      <p>フィギュア、リフト、音楽との同調など、芸術性と技術の両立を学ぶ。</p>
+    </div>
+    <div class="cat-card">
+      <span class="num">06</span>
+      <h3>そのほかの水上競技</h3>
+      <p>ボディボード、SUP、水泳以外の海・プール競技を広く記録していく枠。</p>
+    </div>
+  </div>
+</section>
+
+<section class="log-preview">
+  <div class="log-inner">
+    <div class="section-head">
+      <h2>最近の学習ログ</h2>
+      <span class="count">LATEST 3</span>
+    </div>
+    <div class="log-list">
+      <div class="log-item">
+        <span class="date mono">2026.08.03</span>
+        <span class="entry">水球の反則の種類を整理した。「ホールディング」と「サッキング」の違いがようやく分かった。</span>
+      </div>
+      <div class="log-item">
+        <span class="date mono">2026.07.28</span>
+        <span class="entry">飛び込みの技の系統(前逆捻り込)について調べた。名前の付け方に規則性があると知って納得。</span>
+      </div>
+      <div class="log-item">
+        <span class="date mono">2026.07.20</span>
+        <span class="entry">初めてサーフレッスンを受けた。プッシュアップの姿勢が全然できず、まずは陸トレから。</span>
+      </div>
+    </div>
+    <a href="blog.html" class="log-more">すべてのログを見る →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="logo-f">波音ノート</div>
+  <div class="foot-links">
+    <a href="index.html">HOME</a>
+    <a href="blog.html">LOG</a>
+    <a href="gallery.html">GALLERY</a>
+    <a href="about.html">ABOUT</a>
+  </div>
+  <p class="fine">
+    本サイトはAI等の学習データとしての使用を禁止します。<br>
+    This site prohibits the use of its content for AI training purposes.
+  </p>
+</footer>
+
+</body>
+</html>
